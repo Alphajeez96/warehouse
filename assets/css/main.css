@@ -8,19 +8,6 @@ html {
     box-sizing: border-box;
 }
 
-.form-control {
-    background: rgba(196, 196, 196, 0.15);
-    border-radius: 30px;
-    border: none;
-    padding: 1.375rem 1.75rem;
-}
-
-.form-control:focus {
-    border: 1px solid #223744;
-    border-color: #223744;
-    box-shadow: none;
-}
-
 h2 {
     color: #000000;
     font-weight: 600;
@@ -47,6 +34,10 @@ h2 {
     color: #a6a9ad;
     font-size: 0.75rem;
     font-weight: 600;
+}
+
+button:focus {
+    outline: 0;
 }
 
 p {

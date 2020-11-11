@@ -54,6 +54,10 @@ export default {
         progress: true,
         retry: { retries: 3 }
     },
+    toast: {
+        position: 'top-right',
+        duration: 10000,
+    },
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
     build: {

@@ -99,7 +99,7 @@ export default {
       secretKey: "$2b$10$Skf92OMDupQhWCHTmdBmP.XrCL90N0b2Xd5cH0VrzhDMH24TqLFMm",
     };
   },
-  mounted() {
+  created() {
     this.greet();
     this.fetchWarehouses();
   },
@@ -146,6 +146,20 @@ export default {
 </script>
 
 <style scoped>
+
+.form-control {
+    background: rgba(196, 196, 196, 0.15);
+    border-radius: 30px;
+    border: none;
+    padding: 1.375rem 1.75rem;
+}
+
+.form-control:focus {
+    border: 1px solid #223744;
+    border-color: #223744;
+    box-shadow: none;
+}
+
 .main {
   background: #fbfbfd;
   height: calc(100vh - 72px);
