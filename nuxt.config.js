@@ -10,22 +10,28 @@ export default {
             { hid: 'description', name: 'description', content: '' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            {
+                rel: 'stylesheet',
+                href: 'https://unpkg.com/element-ui/lib/theme-chalk/index.css',
+            },
         ]
     },
-
 
     css: [
         '~/assets/css/main.css',
     ],
+
     loading: {
-        color: '#c85310',
+        color: '#223744',
         name: 'fading-circle',
         continuous: true,
         duration: 1200
     },
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-    plugins: [],
+    plugins: [
+        '@/plugins/element-ui',
+    ],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,
@@ -37,17 +43,20 @@ export default {
     modules: [
         'bootstrap-vue/nuxt',
         '@nuxtjs/axios',
-        '@nuxtjs/toast'
+        '@nuxtjs/toast',
     ],
+
 
     // Axios module configuration (https://go.nuxtjs.dev/config-axios)
     axios: {
-        baseURL: '',
+        // baseURL: 'https://api.jsonbin.io/b/5fa97d9b48818715939e40ff',
         https: false,
         progress: true,
         retry: { retries: 3 }
     },
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
-    build: {}
+    build: {
+        transpile: [/^element-ui/],
+    }
 }

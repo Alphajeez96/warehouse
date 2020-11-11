@@ -1,73 +1,158 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        warehouse
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+  <div class="main">
+    <!-- Search Bar here -->
+    <div class="border_bottom justify-content-center d-flex">
+      <div class="form-group col-lg-6 mt-3">
+        <input
+          type="search"
+          class="form-control"
+          placeholder="search for a warehouse..."
+          v-model="payload.search"
+        />
       </div>
     </div>
+    <main class="container mt-4">
+      <h2>Hi, Good{{ greeting }}</h2>
+
+      <!-- Filter badges here -->
+      <div class="row mt-4">
+        <badge class="ml-2" text="City"></badge>
+        <badge text="Cluster"></badge>
+        <badge text="Space Available"></badge>
+      </div>
+
+      <!-- Cards here -->
+      <transition name="el-fade-in">
+        <div class="mt-4 row">
+          <div
+            class="col-lg-4 my-2 display_cards"
+            v-for="warehouse in warehouses"
+            :key="warehouse.id"
+            @click="handleTempWarehouse(warehouse)"
+          >
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span class="header">{{ warehouse.name }}</span>
+                <el-button style="float: right; padding: 3px 0" type="text">
+                  <span
+                    class="registered"
+                    v-if="warehouse.is_registered === true"
+                    >Registered</span
+                  >
+                  <span
+                    class="not_registered"
+                    v-if="warehouse.is_registered === false"
+                    >Not Registered</span
+                  >
+                </el-button>
+              </div>
+              <div class="text item d-flex">
+                <div>
+                  <p>
+                    Location: <span class="value">{{ warehouse.city }}</span>
+                  </p>
+                </div>
+                <div class="ml-auto">
+                  <p>
+                    Cluster: <span class="value">{{ warehouse.cluster }}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="text item d-flex">
+                <div>
+                  <p>
+                    Type: <span class="value">{{ warehouse.type }}</span>
+                  </p>
+                </div>
+                <div class="ml-auto">
+                  <p>
+                    Space Available:
+                    <span class="value">{{ warehouse.space_available }}</span>
+                  </p>
+                </div>
+              </div>
+            </el-card>
+          </div>
+        </div>
+      </transition>
+    </main>
   </div>
 </template>
 
 <script>
-export default {}
+import badge from "~/components/generic/badge";
+import axios from "axios";
+import { mapActions } from "vuex";
+export default {
+  components: {
+    badge,
+  },
+
+  data() {
+    return {
+      payload: {
+        search: "",
+      },
+      greeting: "",
+      warehouses: [],
+      secretKey: "$2b$10$Skf92OMDupQhWCHTmdBmP.XrCL90N0b2Xd5cH0VrzhDMH24TqLFMm",
+    };
+  },
+  mounted() {
+    this.greet();
+    this.fetchWarehouses();
+  },
+  methods: {
+    ...mapActions("warehouse", ["handleTempWarehouse"]),
+    greet() {
+      let time = new Date().getHours();
+
+      if (time < 10) {
+        this.greeting = "morning";
+      } else if (time < 20) {
+        this.greeting = "day";
+      } else {
+        this.greeting = "evening";
+      }
+    },
+
+    async fetchWarehouses() {
+      try {
+        const response = await axios.get(
+          "https://api.jsonbin.io/b/5fa97d9b48818715939e40ff",
+          {
+            headers: {
+              "secret-key": this.secretKey,
+            },
+          }
+        );
+
+        this.warehouses = response.data;
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    handleTempWarehouse(warehouse) {
+      this.$store.commit('warehouse/SAVE_TEMP_WAREHOUSE_MUTATION', warehouse)
+      this.$router.push(`/${warehouse.name}`);
+      console.log("clicked");
+    }, 
+
+  },
+};
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+<style scoped>
+.main {
+  background: #fbfbfd;
+  height: calc(100vh - 72px);
+  overflow-y: scroll;
+}
+.border_bottom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>
