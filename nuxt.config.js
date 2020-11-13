@@ -1,6 +1,12 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 export default {
 
     ssr: false,
+    env: {
+        secretKey: process.env.SECRET_KEY,
+    },
 
     head: {
         title: 'warehouse',
@@ -49,7 +55,6 @@ export default {
 
     // Axios module configuration (https://go.nuxtjs.dev/config-axios)
     axios: {
-        // baseURL: 'https://api.jsonbin.io/b/5fa97d9b48818715939e40ff',
         https: false,
         progress: true,
         retry: { retries: 3 }

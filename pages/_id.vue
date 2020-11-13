@@ -17,7 +17,7 @@
       <div class="row mt-4">
         <!-- Map region here -->
         <div class="col-lg-7">
-          <h1>MAP SHOULD BE HERE</h1>
+          <div id="map"></div>
         </div>
 
         <div class="col-lg-5">
@@ -104,12 +104,20 @@
 </template>
 
 <script>
+import axios from "axios";
+import mapboxgl from "mapbox-gl";
 import { mapGetters } from "vuex";
 import edit from "~/components/modals/edit-warehouse";
 export default {
   layout: "Default",
   data() {
-    return {};
+    return {
+      access_token:
+        "pk.eyJ1IjoiYWxwaGFqZWV6IiwiYSI6ImNraGM1aGprdjAxbmQyeG51ZWdyN2llMG0ifQ.TAFFLAh5WNjlNtqgUcZs-Q",
+      map: {},
+      search: "Delhi",
+      center: [],
+    };
   },
   components: {
     edit,
@@ -118,11 +126,32 @@ export default {
     ...mapGetters("warehouse", ["WAREHOUSE"]),
   },
   mounted() {
-    console.log({ warehouseGetters: this.WAREHOUSE });
+    this.createMap();
   },
   methods: {
     openModal() {
       this.$bvModal.show("edit-modal");
+    },
+
+    async createMap() {
+      try {
+        const response = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.WAREHOUSE.city}.json?access_token=${this.access_token}`
+        );
+
+        this.center = response.data.features[0].center;
+
+        mapboxgl.accessToken = this.access_token;
+        this.map = new mapboxgl.Map({
+          container: "map",
+          style: "mapbox://styles/mapbox/streets-v11", 
+          center: this.center, 
+          zoom: 11,
+        });
+        
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
@@ -132,5 +161,8 @@ export default {
 .border_left {
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
+#map {
+  height: 70vh;
+}
 
-</style>
+</style> 

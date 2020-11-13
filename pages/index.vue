@@ -128,8 +128,8 @@ export default {
           }
         );
 
-        this.warehouses = response.data;
-
+        this.warehouses = response.data;     
+   this.$store.commit('warehouse/SAVE_WAREHOUSES_MUTATION', response.data)
       } catch (error) {
         console.log(error);
       }

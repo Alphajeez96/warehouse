@@ -76,11 +76,12 @@
             </div>
           </div>
         </div>
-        
+
         <div class="text-right mt-3">
           <el-button @click="hideModal" type="info button">Cancel</el-button>
           <button type="submit" class="btn btn-outline-primary">Submit</button>
         </div>
+        
       </form>
     </b-modal>
   </div>
@@ -113,6 +114,7 @@ export default {
     async updateWarehouse() {
       try {
         this.loading = true;
+        
         const response = await axios.put(
           "https://api.jsonbin.io/b/5fa97d9b48818715939e40ff",
           this.payload,
@@ -122,12 +124,16 @@ export default {
             },
           }
         );
+
         if ((response.success = true)) {
           this.$toast.success("Warehouse Updated Successfully");
           this.hideModal();
+          this.loading = false
         }
+
       } catch (error) {
         this.$toast.error(error);
+             this.loading = false
       }
     },
     hideModal() {
