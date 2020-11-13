@@ -116,8 +116,7 @@ export default {
   data() {
     return {
       loading: false,
-      access_token:
-        "pk.eyJ1IjoiYWxwaGFqZWV6IiwiYSI6ImNraGM1aGprdjAxbmQyeG51ZWdyN2llMG0ifQ.TAFFLAh5WNjlNtqgUcZs-Q",
+      access_token:process.env.MAP_ACCESS_TOKEN,
       map: {},
       center: [],
     };

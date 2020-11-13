@@ -103,7 +103,7 @@ export default {
         is_registerred: null,
         is_live: null,
       },
-      secretKey: "$2b$10$Skf92OMDupQhWCHTmdBmP.XrCL90N0b2Xd5cH0VrzhDMH24TqLFMm",
+      secretKey:process.env.API_SECRET_KEY
     };
   },
   mounted() {

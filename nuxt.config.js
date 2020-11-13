@@ -1,11 +1,12 @@
-import dotenv from 'dotenv'
-dotenv.config()
+// import dotenv from 'dotenv'
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 export default {
 
     ssr: false,
     env: {
-        secretKey: process.env.SECRET_KEY,
+        API_SECRET_KEY: process.env.API_SECRET_KEY,
+        MAP_ACCESS_TOKEN: process.env.MAP_ACCESS_TOKEN
     },
 
     head: {
