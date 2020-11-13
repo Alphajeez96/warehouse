@@ -17,13 +17,14 @@
       <div class="row mt-4">
         <!-- Map region here -->
         <div class="col-lg-7">
+          <div v-if="loading" class="loader text-center"></div>
           <div id="map"></div>
         </div>
 
         <div class="col-lg-5">
           <!-- Cards here -->
           <transition name="el-fade-in">
-            <div class="row">
+            <div class="row" v-if="(WAREHOUSE = !'')">
               <div class="my-2 w-100">
                 <el-card class="box-card">
                   <div slot="header" class="clearfix">
@@ -96,11 +97,11 @@
                 </el-card>
               </div>
             </div>
+          
           </transition>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -109,17 +110,21 @@ import axios from "axios";
 import mapboxgl from "mapbox-gl";
 import { mapGetters } from "vuex";
 import edit from "~/components/modals/edit-warehouse";
+import loading from "~/components/generic/loading";
 export default {
   layout: "Default",
   data() {
     return {
-      access_token:"pk.eyJ1IjoiYWxwaGFqZWV6IiwiYSI6ImNraGM1aGprdjAxbmQyeG51ZWdyN2llMG0ifQ.TAFFLAh5WNjlNtqgUcZs-Q",
+      loading: false,
+      access_token:
+        "pk.eyJ1IjoiYWxwaGFqZWV6IiwiYSI6ImNraGM1aGprdjAxbmQyeG51ZWdyN2llMG0ifQ.TAFFLAh5WNjlNtqgUcZs-Q",
       map: {},
       center: [],
     };
   },
   components: {
     edit,
+    loading,
   },
   computed: {
     ...mapGetters("warehouse", ["WAREHOUSE"]),
@@ -134,20 +139,20 @@ export default {
 
     async createMap() {
       try {
+        this.loading = true;
         const response = await axios.get(
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.WAREHOUSE.city}.json?access_token=${this.access_token}`
         );
-
+        this.loading = false;
         this.center = response.data.features[0].center;
 
         mapboxgl.accessToken = this.access_token;
         this.map = new mapboxgl.Map({
           container: "map",
-          style: "mapbox://styles/mapbox/streets-v11", 
-          center: this.center, 
+          style: "mapbox://styles/mapbox/streets-v11",
+          center: this.center,
           zoom: 11,
         });
-
       } catch (error) {
         console.log(error);
       }
@@ -163,5 +168,4 @@ export default {
 #map {
   height: 70vh;
 }
-
 </style> 

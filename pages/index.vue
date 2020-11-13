@@ -7,10 +7,11 @@
           type="search"
           class="form-control"
           placeholder="search for a warehouse..."
-              v-model="searchQuery"
+          v-model="searchQuery"
         />
       </div>
     </div>
+
     <main class="container mt-4">
       <h2>Hi, Good{{ greeting }}</h2>
 
@@ -23,7 +24,7 @@
 
       <!-- Cards here -->
       <transition name="el-fade-in">
-        <div class="mt-4 row">
+        <div v-if="resultQuery != ''" class="mt-4 row">
           <div
             class="col-lg-4 my-2 display_cards"
             v-for="warehouse in resultQuery"
@@ -75,6 +76,8 @@
             </el-card>
           </div>
         </div>
+
+        <div v-else-if="(loading = true)" class="loader text-center"></div>
       </transition>
     </main>
   </div>
@@ -84,32 +87,36 @@
 import badge from "~/components/generic/badge";
 import axios from "axios";
 import { mapActions } from "vuex";
+import loading from "~/components/generic/loading";
 export default {
   components: {
     badge,
+    loading,
   },
   data() {
     return {
-  searchQuery:"",
+      loading: false,
+      searchQuery: "",
       greeting: "",
       warehouses: [],
       secretKey: "$2b$10$Skf92OMDupQhWCHTmdBmP.XrCL90N0b2Xd5cH0VrzhDMH24TqLFMm",
     };
   },
-  computed:{
-  resultQuery() {
+  computed: {
+    resultQuery() {
       if (this.searchQuery) {
+        this.loading = true;
         return this.warehouses.filter((warehouse) => {
           return this.searchQuery
             .toLowerCase()
             .split(" ")
             .every((v) => warehouse.name.toLowerCase().includes(v));
-            
+          this.loading = false;
         });
       } else {
         return this.warehouses;
       }
-    }
+    },
   },
   created() {
     this.greet();
@@ -140,36 +147,32 @@ export default {
           }
         );
 
-        this.warehouses = response.data;     
-   this.$store.commit('warehouse/SAVE_WAREHOUSES_MUTATION', response.data)
-      } catch (error) {
-        console.log(error);
-      }
+        this.warehouses = response.data;
+        this.$store.commit("warehouse/SAVE_WAREHOUSES_MUTATION", response.data);
+      } catch (error) {}
     },
 
     handleTempWarehouse(warehouse) {
-      this.$store.commit('warehouse/SAVE_TEMP_WAREHOUSE_MUTATION', warehouse)
+      this.$store.commit("warehouse/SAVE_TEMP_WAREHOUSE_MUTATION", warehouse);
       this.$router.push(`/${warehouse.name}`);
       console.log("clicked");
-    }, 
-
+    },
   },
 };
 </script>
 
 <style scoped>
-
 .form-control {
-    background: rgba(196, 196, 196, 0.15);
-    border-radius: 30px;
-    border: none;
-    padding: 1.375rem 1.75rem;
+  background: rgba(196, 196, 196, 0.15);
+  border-radius: 30px;
+  border: none;
+  padding: 1.375rem 1.75rem;
 }
 
 .form-control:focus {
-    border: 1px solid #223744;
-    border-color: #223744;
-    box-shadow: none;
+  border: 1px solid #223744;
+  border-color: #223744;
+  box-shadow: none;
 }
 
 .main {
@@ -180,5 +183,4 @@ export default {
 .border_bottom {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-
 </style>
