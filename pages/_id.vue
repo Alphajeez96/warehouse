@@ -100,6 +100,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -112,10 +113,8 @@ export default {
   layout: "Default",
   data() {
     return {
-      access_token:
-        "pk.eyJ1IjoiYWxwaGFqZWV6IiwiYSI6ImNraGM1aGprdjAxbmQyeG51ZWdyN2llMG0ifQ.TAFFLAh5WNjlNtqgUcZs-Q",
+      access_token:"pk.eyJ1IjoiYWxwaGFqZWV6IiwiYSI6ImNraGM1aGprdjAxbmQyeG51ZWdyN2llMG0ifQ.TAFFLAh5WNjlNtqgUcZs-Q",
       map: {},
-      search: "Delhi",
       center: [],
     };
   },
@@ -148,7 +147,7 @@ export default {
           center: this.center, 
           zoom: 11,
         });
-        
+
       } catch (error) {
         console.log(error);
       }

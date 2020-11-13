@@ -7,7 +7,7 @@
           type="search"
           class="form-control"
           placeholder="search for a warehouse..."
-          v-model="payload.search"
+              v-model="searchQuery"
         />
       </div>
     </div>
@@ -26,7 +26,7 @@
         <div class="mt-4 row">
           <div
             class="col-lg-4 my-2 display_cards"
-            v-for="warehouse in warehouses"
+            v-for="warehouse in resultQuery"
             :key="warehouse.id"
             @click="handleTempWarehouse(warehouse)"
           >
@@ -88,16 +88,28 @@ export default {
   components: {
     badge,
   },
-
   data() {
     return {
-      payload: {
-        search: "",
-      },
+  searchQuery:"",
       greeting: "",
       warehouses: [],
       secretKey: "$2b$10$Skf92OMDupQhWCHTmdBmP.XrCL90N0b2Xd5cH0VrzhDMH24TqLFMm",
     };
+  },
+  computed:{
+  resultQuery() {
+      if (this.searchQuery) {
+        return this.warehouses.filter((warehouse) => {
+          return this.searchQuery
+            .toLowerCase()
+            .split(" ")
+            .every((v) => warehouse.name.toLowerCase().includes(v));
+            
+        });
+      } else {
+        return this.warehouses;
+      }
+    }
   },
   created() {
     this.greet();
